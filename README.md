@@ -2,26 +2,25 @@
 
 ## 🚀 Overview
 
-An advanced agentic AI solution for Azure VM RDP troubleshooting, built with Microsoft-centric tools and frameworks. This solution demonstrates enterprise-grade AI integration for Azure support scenarios.
+A simple command-line tool for diagnosing and fixing RDP connectivity issues on Azure VMs using AI-powered analysis.
 
 ## ✨ Features
 
-- **🤖 Agentic AI Architecture**: Multi-agent system with specialized diagnostic capabilities
-- **🔍 Comprehensive Diagnostics**: VM status, NSG rules, network connectivity, boot diagnostics
-- **🧠 OpenAI GPT-4 Integration**: Real-time AI-powered analysis and recommendations
-- **☁️ Azure Native**: Built with Azure SDK, Bot Framework, and Azure services
-- **🏗️ Infrastructure as Code**: Complete Terraform deployment configurations
-- **📊 Production Ready**: Monitoring, security, and observability built-in
+- **🔍 VM Diagnostics**: Check VM status, power state, and configuration
+- **🌐 Network Analysis**: Analyze NSG rules and network connectivity
+- **🧠 AI-Powered Analysis**: OpenAI GPT-4 integration for intelligent troubleshooting
+- **☁️ Azure Native**: Built with Azure SDK and Azure CLI authentication
+- **⚡ Simple & Fast**: Command-line tool with minimal setup
 
 ## 🎯 Assessment Deliverables
 
 This solution was created for a Microsoft Azure Supportability Test and includes:
 
-- ✅ **Reference Architecture**: Complete system design with all components
+- ✅ **Reference Architecture**: Simple CLI tool architecture
 - ✅ **Customer Flow**: End-to-end troubleshooting workflow
-- ✅ **Troubleshooting Playbook**: Comprehensive RDP diagnostic procedures
-- ✅ **Safety & Security**: Enterprise-grade security and governance
-- ✅ **Observability**: Complete monitoring and metrics framework
+- ✅ **Troubleshooting Playbook**: RDP diagnostic procedures
+- ✅ **Safety & Security**: Secure API key management
+- ✅ **Observability**: Logging and output options
 
 ## 🏗️ Architecture
 
@@ -30,12 +29,12 @@ This solution was created for a Microsoft Azure Supportability Test and includes
 │                    Enable RDP Bot                     │
 ├─────────────────────────────────────────────────────────┤
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
-│  │   Bot       │  │   AI        │  │ Diagnostic  │    │
-│  │  Service    │  │  Agent      │  │  Engine     │    │
+│  │   Azure     │  │   OpenAI    │  │   CLI       │    │
+│  │   SDK       │  │   API       │  │   Tool      │    │
 │  └─────────────┘  └─────────────┘  └─────────────┘    │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
-│  │   Azure     │  │   Session   │  │   Safety    │    │
-│  │ Inspector   │  │ Management  │  │  Filter     │    │
+│  │   VM        │  │   Network   │  │   AI        │    │
+│  │ Inspector   │  │   Analysis  │  │ Analysis    │    │
 │  └─────────────┘  └─────────────┘  └─────────────┘    │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -46,185 +45,139 @@ This solution was created for a Microsoft Azure Supportability Test and includes
 
 - Python 3.9+ (tested with Python 3.13)
 - Azure subscription with appropriate permissions
-- Azure OpenAI Service with GPT-4 deployment
-- Azure CLI (for deployment)
+- OpenAI API key
+- Azure CLI (for authentication)
 
 ### Installation
 
-1. **Clone the repository**:
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/danbroz/Enable-RDP-Bot.git
    cd Enable-RDP-Bot
    ```
 
-2. **Install dependencies**:
+2. **Install dependencies:**
    ```bash
-   pip install -r requirements_simple.txt
+   pip install -r requirements.txt
    ```
 
-3. **Configure environment**:
+3. **Set up environment:**
    ```bash
    cp env.example .env
-   # Edit .env with your Azure credentials
+   # Edit .env and add your OpenAI API key
    ```
 
-### Command-Line Tool (Recommended)
+4. **Authenticate with Azure:**
+   ```bash
+   az login
+   az account set --subscription "your-subscription-id"
+   ```
 
-**Use the professional CLI tool for RDP troubleshooting:**
+### Usage
 
-```bash
-# Basic RDP troubleshooting
-python3 enable_rdp.py --resource-group production-rg --vm web-server-01
-
-# Auto-fix RDP issues
-python3 enable_rdp.py --resource-group dev-rg --vm test-vm --auto-fix
-
-# Verbose output with detailed diagnostics
-python3 enable_rdp.py --resource-group prod-rg --vm app-server --verbose
-
-# JSON output for automation
-python3 enable_rdp.py --resource-group staging-rg --vm db-server --output json
-```
-
-**See all options:**
-```bash
-python3 enable_rdp.py --help
-```
-
-### Demo Scripts
+#### Basic Usage
 
 ```bash
-# Run the CLI tool demo
-python3 demo_enable_rdp.py
-
-# Run the simulated problem VM test
-python3 test_simulated_problem_vm.py
+python enable_rdp.py --resource-group my-resource-group --vm my-vm-name
 ```
 
-## 📁 Project Structure
+#### Advanced Usage
 
+```bash
+# With auto-fix enabled
+python enable_rdp.py --resource-group prod-rg --vm web-server-01 --auto-fix
+
+# With verbose logging
+python enable_rdp.py --resource-group test-rg --vm test-vm --verbose
+
+# Save results to file
+python enable_rdp.py --resource-group prod-rg --vm app-server --output report.json
+
+# Specify subscription ID
+python enable_rdp.py --resource-group my-rg --vm my-vm --subscription-id "your-subscription-id"
 ```
-├── src/                    # Source code
-│   ├── agents/            # AI agents
-│   ├── bot/               # Bot service
-│   ├── memory/            # Conversation storage
-│   ├── plugins/           # Azure diagnostic plugins
-│   └── safety/            # Content safety
-├── docs/                  # Documentation
-├── tests/                 # Test scenarios
-├── prompts/               # AI prompt templates
-├── config/                # Configuration files
-├── create_example_vm.sh   # Azure CLI script to create test VM
-└── cleanup_example_vm.sh  # Azure CLI script to clean up test VM
-```
+
+#### Command Line Options
+
+- `--resource-group, -g`: Azure resource group name (required)
+- `--vm, -v`: Virtual machine name (required)
+- `--subscription-id, -s`: Azure subscription ID (optional, defaults to Azure CLI default)
+- `--auto-fix, -a`: Automatically apply fixes (use with caution)
+- `--verbose, -V`: Enable verbose logging
+- `--output, -o`: Output file for results (JSON format)
 
 ## 🧪 Testing
 
-### Command-Line Tool (Production Ready)
+### Create Test VM
+
 ```bash
-# Test with your own VMs
-python3 enable_rdp.py --resource-group your-rg --vm your-vm
-
-# See the demo
-python3 demo_enable_rdp.py
-```
-- Professional CLI tool for real-world use
-- Comprehensive VM diagnostics
-- AI-powered analysis and recommendations
-- Auto-fix capabilities
-
-### Simulated Problem VM Test
-```bash
-python3 test_simulated_problem_vm.py
-```
-- Tests AI agent against simulated Azure VM issues
-- No real Azure resources required
-- Demonstrates complete functionality
-
-### Real VM Test
-```bash
-python3 test_real_vm.py
-```
-- Tests against actual Azure VMs
-- Requires valid Azure credentials
-- Creates real diagnostic data
-
-### Final Demo
-```bash
-python3 final_demo.py
-```
-- Comprehensive demonstration
-- Shows all capabilities
-- Production-ready examples
-
-## 🏗️ Example VM Setup
-
-### Create Test VM with Azure CLI
-```bash
-# Create a Windows VM with intentional RDP issues for testing
+# Create a test VM with RDP issues
 ./create_example_vm.sh
 
-# Clean up the test VM when done
+# Test the tool
+python enable_rdp.py --resource-group example-resource-group --vm example-vm
+
+# Clean up
 ./cleanup_example_vm.sh
 ```
 
-The example VM script creates:
-- Windows Server 2019 VM
-- Network Security Group with RDP port 3389 **BLOCKED** (intentional problem)
-- VM in **STOPPED** state (intentional problem)
-- All resources needed for testing the RDP troubleshooting agent
+## 📊 Output Format
 
-## 📊 Demo Results
+The tool outputs JSON with the following structure:
 
-The solution successfully demonstrates:
+```json
+{
+  "timestamp": "2024-01-01T12:00:00",
+  "vm_name": "my-vm",
+  "resource_group": "my-rg",
+  "vm_status": {
+    "name": "my-vm",
+    "power_state": "running",
+    "vm_size": "Standard_B1s",
+    "os_type": "Windows"
+  },
+  "nsg_info": {
+    "rdp_allowed": true,
+    "rules": [...]
+  },
+  "ai_analysis": {
+    "root_cause": "VM is running and RDP is allowed",
+    "fix_steps": ["No action needed"],
+    "prevention": ["Monitor NSG rules"],
+    "priority": "Low",
+    "confidence": 0.95
+  },
+  "status": "completed"
+}
+```
 
-- **✅ Issue Detection**: 100% accuracy in identifying RDP problems
-- **✅ AI Analysis**: Intelligent root cause analysis and remediation
-- **✅ Response Time**: ~16 seconds per complete troubleshooting session
-- **✅ Production Readiness**: Scalable, async, enterprise-ready system
+## 🔧 Troubleshooting
+
+### Common Issues
+
+1. **Authentication Error**: Make sure you're logged in with `az login`
+2. **OpenAI API Error**: Check your API key in the `.env` file
+3. **VM Not Found**: Verify the resource group and VM name
+4. **Permission Error**: Ensure you have appropriate Azure permissions
+
+### Logs
+
+The tool creates detailed logs in `rdp_troubleshooting.log` when using verbose mode.
 
 ## 🛡️ Security
 
-- **🔐 Credentials**: All sensitive information removed from repository
-- **🔑 Authentication**: Service principal with least privilege access
-- **📝 Audit Trail**: Complete activity logging and session tracking
-- **🛡️ Content Safety**: AI output validation and filtering
+- API keys are stored in `.env` file (not committed to git)
+- Uses Azure CLI authentication (no hardcoded credentials)
+- All API calls are logged for audit purposes
 
-## 📚 Documentation
+## 📝 License
 
-- [Architecture](docs/ARCHITECTURE.md) - Complete system design
-- [Customer Flow](docs/CUSTOMER_FLOW.md) - End-to-end workflow
-- [Troubleshooting Playbook](docs/TROUBLESHOOTING_PLAYBOOK.md) - Diagnostic procedures
-- [Security & Governance](docs/SECURITY_GOVERNANCE.md) - Security framework
-- [Observability](docs/OBSERVABILITY.md) - Monitoring and metrics
-- [Setup Instructions](SETUP_INSTRUCTIONS.md) - Detailed setup guide
-
-## 🎯 Assessment Results
-
-This solution fully satisfies all Microsoft Azure Supportability Test requirements:
-
-- ✅ **Reference Architecture** + Description
-- ✅ **Customer Flow** to Resolution (≤ 2 pages)
-- ✅ **Troubleshooting Play** for Windows VM RDP failures
-- ✅ **Safety, Security, and Governance** plan
-- ✅ **Observability & Metrics**
+This project is created for assessment purposes.
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+This is an assessment project. For questions or issues, please contact the maintainer.
 
-## 📄 License
+## 📞 Support
 
-This project is provided as-is for demonstration purposes. Please ensure compliance with your organization's policies and Azure terms of service.
-
-## 🎉 Acknowledgments
-
-Built for Microsoft Azure Supportability Test demonstrating advanced AI integration and Azure expertise.
-
----
-
-**🚀 Ready for Production Deployment with Proper Credential Configuration**
+For technical support or questions about this assessment solution, please refer to the documentation or contact the development team.
