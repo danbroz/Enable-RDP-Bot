@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Azure CLI Script to Create Example VM for RDP Troubleshooting
+# Enable RDP Bot - Azure CLI Script to Create Example VM
 # This script creates a Windows VM with intentional RDP issues for testing
 
 set -e
@@ -20,10 +20,10 @@ VM_SIZE="Standard_B2s"
 ADMIN_USERNAME="azureuser"
 ADMIN_PASSWORD="AzurePassword123!"
 
-echo -e "${BLUE}🚀 Creating Example VM for RDP Troubleshooting${NC}"
+echo -e "${BLUE}🚀 Enable RDP Bot - Creating Example VM${NC}"
 echo "=================================================="
 echo "This script will create a Windows VM with intentional RDP issues"
-echo "for testing the Azure RDP Troubleshooting Agent."
+echo "for testing the Enable RDP Bot."
 echo ""
 
 # Check if Azure CLI is installed
@@ -180,7 +180,7 @@ echo "   3. VM has limited resources (Standard_B2s)"
 echo ""
 echo -e "${BLUE}🧪 Testing Instructions:${NC}"
 echo "   1. Run: python3 enable_rdp.py --resource-group $RESOURCE_GROUP --vm $VM_NAME"
-echo "   2. The AI agent will detect the RDP blocking and VM stopped issues"
+echo "   2. The Enable RDP Bot will detect the RDP blocking and VM stopped issues"
 echo "   3. AI will provide specific remediation steps"
 
 echo ""
@@ -191,5 +191,5 @@ echo "   Try RDP: Should fail due to NSG blocking"
 
 echo ""
 echo -e "${GREEN}🎯 Ready for AI Agent Testing!${NC}"
-echo "The VM is now ready to test the Azure RDP Troubleshooting Agent."
+echo "The VM is now ready to test the Enable RDP Bot."
 echo "Run the enable_rdp.py tool to see the AI agent in action!"

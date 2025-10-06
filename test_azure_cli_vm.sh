@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Test script to demonstrate Azure CLI VM creation and RDP troubleshooting
+# Enable RDP Bot - Test script to demonstrate Azure CLI VM creation and RDP troubleshooting
 # This script shows the complete workflow from VM creation to AI troubleshooting
 
 set -e
@@ -12,11 +12,11 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}🚀 Azure CLI VM Testing Workflow${NC}"
+echo -e "${BLUE}🚀 Enable RDP Bot - Azure CLI VM Testing Workflow${NC}"
 echo "=============================================="
 echo "This script demonstrates the complete workflow:"
 echo "1. Create example VM with RDP issues"
-echo "2. Test the RDP troubleshooting agent"
+echo "2. Test the Enable RDP Bot"
 echo "3. Clean up resources"
 echo ""
 
@@ -78,7 +78,7 @@ echo -e "${GREEN}✅ VM created successfully${NC}"
 
 # Step 2: Test the RDP troubleshooting agent
 echo ""
-echo -e "${YELLOW}Step 2: Testing RDP troubleshooting agent...${NC}"
+echo -e "${YELLOW}Step 2: Testing Enable RDP Bot...${NC}"
 echo "Running: python3 enable_rdp.py --resource-group ai-support-bot-test-rg --vm example-vm"
 echo ""
 
@@ -92,7 +92,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo ""
-echo -e "${GREEN}✅ RDP troubleshooting test completed${NC}"
+echo -e "${GREEN}✅ Enable RDP Bot test completed${NC}"
 
 # Step 3: Ask if user wants to clean up
 echo ""
@@ -117,7 +117,7 @@ echo -e "${GREEN}🎉 Azure CLI VM Test Completed Successfully!${NC}"
 echo "=============================================="
 echo "The test demonstrated:"
 echo "✅ Azure CLI VM creation with intentional RDP issues"
-echo "✅ RDP troubleshooting agent diagnostics"
+echo "✅ Enable RDP Bot diagnostics"
 echo "✅ AI-powered analysis and recommendations"
 echo "✅ Complete workflow from problem to solution"
 echo ""

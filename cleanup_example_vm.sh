@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Azure CLI Script to Clean Up Example VM
+# Enable RDP Bot - Azure CLI Script to Clean Up Example VM
 # This script removes the test VM and all associated resources
 
 set -e
@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 # Configuration
 RESOURCE_GROUP="ai-support-bot-test-rg"
 
-echo -e "${BLUE}🧹 Cleaning Up Example VM and Resources${NC}"
+echo -e "${BLUE}🧹 Enable RDP Bot - Cleaning Up Example VM${NC}"
 echo "=============================================="
 echo "This script will remove the test VM and all associated resources."
 echo ""

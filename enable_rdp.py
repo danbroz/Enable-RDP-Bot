@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Azure RDP Troubleshooting Agent
+Enable RDP Bot
 A command-line tool for diagnosing and fixing RDP connectivity issues on Azure VMs.
 
 Usage:
@@ -387,7 +387,7 @@ class AzureRDPTroubleshooter:
 def print_results(results: Dict[str, Any], verbose: bool = False):
     """Print troubleshooting results in a formatted way"""
     print("\n" + "="*60)
-    print("🔍 AZURE RDP TROUBLESHOOTING RESULTS")
+    print("🔍 ENABLE RDP BOT - TROUBLESHOOTING RESULTS")
     print("="*60)
     
     if results["status"] == "completed":
@@ -435,7 +435,7 @@ def print_results(results: Dict[str, Any], verbose: bool = False):
 async def main():
     """Main function"""
     parser = argparse.ArgumentParser(
-        description="Azure RDP Troubleshooting Agent",
+        description="Enable RDP Bot - Azure RDP Troubleshooting Agent",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:

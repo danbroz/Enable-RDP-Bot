@@ -15,7 +15,7 @@ sys.path.append('src')
 async def demo_enable_rdp():
     """Demonstrate the enable_rdp.py functionality"""
     
-    print("🚀 Azure RDP Troubleshooting Agent - Demo")
+    print("🚀 Enable RDP Bot - Demo")
     print("=" * 50)
     print("This demo shows how to use the enable_rdp.py command-line tool")
     print()
@@ -80,7 +80,7 @@ async def demo_enable_rdp():
     print(f"\n📋 Sample Output:")
     print("-" * 30)
     print("""
-🔍 AZURE RDP TROUBLESHOOTING RESULTS
+🔍 ENABLE RDP BOT - TROUBLESHOOTING RESULTS
 ============================================================
 
 📊 VM STATUS:

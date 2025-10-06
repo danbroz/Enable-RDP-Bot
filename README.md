@@ -1,4 +1,4 @@
-# Azure Agentic AI Support Bot
+# Enable RDP Bot
 
 ## 🚀 Overview
 
@@ -27,7 +27,7 @@ This solution was created for a Microsoft Azure Supportability Test and includes
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                Azure Agentic AI Support Bot            │
+│                    Enable RDP Bot                     │
 ├─────────────────────────────────────────────────────────┤
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
 │  │   Bot       │  │   AI        │  │ Diagnostic  │    │
@@ -53,8 +53,8 @@ This solution was created for a Microsoft Azure Supportability Test and includes
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/danbroz/Azure-Agentic-AI-Support-Bot.git
-   cd Azure-Agentic-AI-Support-Bot
+   git clone https://github.com/danbroz/Enable-RDP-Bot.git
+   cd Enable-RDP-Bot
    ```
 
 2. **Install dependencies**:
