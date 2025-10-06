@@ -1,0 +1,108 @@
+# Agent Configuration for Azure Support Bot
+
+# Main Orchestrator Agent
+main_agent:
+  name: "Azure Support Orchestrator"
+  role: "Primary coordinator for Azure VM RDP troubleshooting"
+  capabilities:
+    - conversation_routing
+    - context_management
+    - escalation_handling
+    - user_authentication
+  
+  behavior:
+    max_conversation_turns: 50
+    escalation_threshold: 5
+    auto_timeout: 1800  # 30 minutes
+    context_preservation: true
+
+# Diagnostic Specialist Agent
+diagnostic_agent:
+  name: "RDP Diagnostics Specialist"
+  role: "Expert in Windows VM RDP connectivity troubleshooting"
+  capabilities:
+    - vm_status_analysis
+    - network_connectivity_tests
+    - security_group_validation
+    - performance_diagnostics
+    - log_analysis
+  
+  diagnostic_sequence:
+    - vm_health_check
+    - network_security_groups
+    - firewall_status
+    - rdp_service_status
+    - authentication_logs
+    - network_connectivity
+    - resource_availability
+  
+  escalation_triggers:
+    - critical_security_issues
+    - data_corruption_suspected
+    - multi_vm_outage
+    - unauthorized_access_attempts
+
+# Resolution Agent
+resolution_agent:
+  name: "Automated Resolution Engine"
+  role: "Executes fixes and validates resolutions"
+  capabilities:
+    - automated_fixes
+    - configuration_changes
+    - service_restarts
+    - security_updates
+    - validation_testing
+  
+  safety_measures:
+    - dry_run_mode: true  # Default to dry run
+    - confirmation_required: true
+    - backup_before_changes: true
+    - rollback_capability: true
+  
+  resolution_types:
+    - network_configuration
+    - security_group_updates
+    - vm_restart
+    - service_restart
+    - firewall_rules
+    - dns_configuration
+
+# Safety and Security Configuration
+safety:
+  content_filtering: true
+  pii_detection: true
+  audit_logging: true
+  action_authorization: true
+  
+  guardrails:
+    - no_destructive_operations_without_confirmation
+    - no_pii_exposure
+    - no_unauthorized_resource_access
+    - no_sensitive_data_logging
+  
+  approval_required_for:
+    - vm_deletion
+    - security_group_deletion
+    - network_configuration_changes
+    - user_permission_changes
+
+# Monitoring and Observability
+monitoring:
+  metrics:
+    - conversation_duration
+    - resolution_success_rate
+    - escalation_frequency
+    - response_time
+    - user_satisfaction
+  
+  alerts:
+    - high_error_rate: 10%
+    - slow_response_time: 30s
+    - failed_resolutions: 20%
+    - security_violations: immediate
+  
+  logging:
+    level: "INFO"
+    structured: true
+    include_context: true
+    retention_days: 90

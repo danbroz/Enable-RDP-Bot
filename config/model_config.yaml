@@ -1,0 +1,43 @@
+# Azure OpenAI Model Configuration
+openai:
+  deployment_name: "gpt-4-turbo"
+  api_version: "2024-02-15-preview"
+  temperature: 0.7
+  max_tokens: 1000
+  top_p: 0.9
+  frequency_penalty: 0.5
+  presence_penalty: 0.5
+  stop_sequences: ["<|im_end|>", "<|im_start|>"]
+  timeout: 30
+
+# Semantic Kernel Configuration
+semantic_kernel:
+  memory:
+    storage_type: "cosmos_db"
+    max_memory_items: 100
+    relevance_threshold: 0.7
+  
+  plugins:
+    timeout: 60
+    retry_attempts: 3
+    retry_delay: 1
+
+# Agent Behavior Configuration
+agents:
+  main_agent:
+    temperature: 0.7
+    max_tokens: 800
+    conversation_memory: true
+    context_window: 10
+  
+  diagnostic_agent:
+    temperature: 0.3  # Lower for more deterministic diagnostics
+    max_tokens: 1200
+    detailed_logging: true
+    auto_escalation: true
+  
+  resolution_agent:
+    temperature: 0.5
+    max_tokens: 600
+    confirmation_required: true
+    dry_run_mode: false
