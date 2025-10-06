@@ -118,7 +118,7 @@ echo -e "${GREEN}✅ NSG created with NO RDP rules (default deny)${NC}"
 
 # Create public IP
 echo -e "${YELLOW}🌍 Creating public IP address${NC}"
-az network public-ip create \
+az network public-ip create 2>/dev/null \
     --resource-group $RESOURCE_GROUP \
     --name "${VM_NAME}-pip" \
     --allocation-method Static \
@@ -140,7 +140,7 @@ echo -e "${GREEN}✅ Network interface created${NC}"
 
 # Create Windows VM
 echo -e "${YELLOW}🖥️  Creating Windows VM${NC}"
-az vm create \
+az vm create 2>/dev/null \
     --resource-group $RESOURCE_GROUP \
     --name $VM_NAME \
     --location "$LOCATION" \

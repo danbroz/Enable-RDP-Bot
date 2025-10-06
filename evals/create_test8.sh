@@ -130,7 +130,7 @@ echo "✅ NSG created with COMPLEX conflicting rules"
 
 # Create public IP address
 echo "🌍 Creating public IP address"
-az network public-ip create \
+az network public-ip create 2>/dev/null \
     --resource-group $RESOURCE_GROUP \
     --name ${VM_NAME}-pip \
     --allocation-method Static \
@@ -150,7 +150,7 @@ echo "✅ Network interface created"
 
 # Create Windows VM
 echo "🖥️  Creating Windows VM"
-az vm create \
+az vm create 2>/dev/null \
     --resource-group $RESOURCE_GROUP \
     --name $VM_NAME \
     --location $LOCATION \
@@ -159,7 +159,6 @@ az vm create \
     --image Win2019Datacenter \
     --admin-username $ADMIN_USERNAME \
     --admin-password $ADMIN_PASSWORD \
-    --public-ip-sku Standard \
     --public-ip-sku Standard > /dev/null
 
 # Get VM details

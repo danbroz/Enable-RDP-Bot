@@ -84,7 +84,7 @@ echo "✅ NSG created with WRONG destination rule (10.0.1.5 instead of *)"
 
 # Create public IP address
 echo "🌍 Creating public IP address"
-az network public-ip create \
+az network public-ip create 2>/dev/null \
     --resource-group $RESOURCE_GROUP \
     --name ${VM_NAME}-pip \
     --allocation-method Static \
@@ -104,7 +104,7 @@ echo "✅ Network interface created"
 
 # Create Windows VM
 echo "🖥️  Creating Windows VM"
-az vm create \
+az vm create 2>/dev/null \
     --resource-group $RESOURCE_GROUP \
     --name $VM_NAME \
     --location $LOCATION \
@@ -113,7 +113,6 @@ az vm create \
     --image Win2019Datacenter \
     --admin-username $ADMIN_USERNAME \
     --admin-password $ADMIN_PASSWORD \
-    --public-ip-sku Standard \
     --public-ip-sku Standard > /dev/null
 
 # Get VM details
