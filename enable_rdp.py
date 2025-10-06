@@ -28,10 +28,10 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Configure logging (always verbose)
+# Configure logging (minimal output)
 logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO,
+    format='%(levelname)s: %(message)s'
 )
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,6 @@ class AzureRDPTroubleshooter:
         try:
             models = self.openai_client.models.list()
             available_models = [model.id for model in models.data]
-            logger.info(f"Available OpenAI models: {available_models}")
             return available_models
         except Exception as e:
             logger.warning(f"Could not fetch available models: {e}")
@@ -75,7 +74,6 @@ class AzureRDPTroubleshooter:
         
         for model in preferred_models:
             if model in self.available_models:
-                logger.info(f"Selected model: {model}")
                 return model
         
         # Fallback to first available model
@@ -204,7 +202,6 @@ class AzureRDPTroubleshooter:
             
             # Parse AI response
             ai_response = response.choices[0].message.content
-            logger.debug(f"Raw AI response: {ai_response}")
             
             # Check for empty response
             if not ai_response or ai_response.strip() == "":
@@ -270,7 +267,6 @@ class AzureRDPTroubleshooter:
         logger.info(f"Starting RDP troubleshooting for VM: {vm_name} in resource group: {resource_group}")
         
         # Step 1: Get VM status
-        logger.info("Step 1: Checking VM status...")
         vm_status = self.get_vm_status(resource_group, vm_name)
         
         if 'error' in vm_status:
@@ -281,11 +277,9 @@ class AzureRDPTroubleshooter:
             }
         
         # Step 2: Check NSG rules
-        logger.info("Step 2: Checking Network Security Group rules...")
         nsg_info = self.check_nsg_rules(resource_group, vm_name)
         
         # Step 3: AI Analysis
-        logger.info("Step 3: Running AI analysis...")
         ai_analysis = self.analyze_with_ai(vm_status, nsg_info)
         
         # Step 4: Generate report
@@ -299,7 +293,6 @@ class AzureRDPTroubleshooter:
             'status': 'completed'
         }
         
-        logger.info("RDP troubleshooting completed successfully")
         return report
 
 def main():
