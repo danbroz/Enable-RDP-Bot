@@ -16,10 +16,10 @@ A simple command-line tool for diagnosing and fixing RDP connectivity issues on 
 
 This solution was created for a Microsoft Azure Supportability Test and includes:
 
-- ✅ **Reference Architecture**: Simple CLI tool architecture
-- ✅ **Customer Flow**: End-to-end troubleshooting workflow
-- ✅ **Troubleshooting Playbook**: RDP diagnostic procedures
-- ✅ **Safety & Security**: Secure API key management
+- ✅ **Reference Architecture**: Simple CLI tool architecture ([ARCHITECTURE.md](ARCHITECTURE.md))
+- ✅ **Customer Flow**: End-to-end troubleshooting workflow ([ASSESSMENT_SUMMARY.md](ASSESSMENT_SUMMARY.md))
+- ✅ **Troubleshooting Playbook**: RDP diagnostic procedures ([TROUBLESHOOTING_GUIDE.md](TROUBLESHOOTING_GUIDE.md))
+- ✅ **Safety & Security**: Secure API key management ([SECURITY.md](SECURITY.md))
 - ✅ **Observability**: Logging and output options
 
 ## 🏗️ Architecture
@@ -177,6 +177,19 @@ This project is created for assessment purposes.
 ## 🤝 Contributing
 
 This is an assessment project. For questions or issues, please contact the maintainer.
+
+## 📚 Documentation
+
+### Assessment Documentation
+- **[ASSESSMENT_SUMMARY.md](ASSESSMENT_SUMMARY.md)**: Complete assessment deliverables and requirements
+- **[ARCHITECTURE.md](ARCHITECTURE.md)**: Detailed system architecture and design
+- **[TROUBLESHOOTING_GUIDE.md](TROUBLESHOOTING_GUIDE.md)**: Comprehensive RDP troubleshooting procedures
+- **[SECURITY.md](SECURITY.md)**: Security and governance framework
+
+### Quick Reference
+- **Setup**: See [Quick Start](#-quick-start) section above
+- **Usage**: See [Usage](#usage) section above
+- **Troubleshooting**: See [Troubleshooting](#-troubleshooting) section above
 
 ## 📞 Support
 
