@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
 """
-Enable RDP Bot
-A command-line tool for diagnosing and fixing RDP connectivity issues on Azure VMs.
+Enable RDP Bot - Azure RDP Troubleshooting and Auto-Fix Agent
+
+This tool diagnoses RDP connectivity issues on Azure Virtual Machines and automatically
+fixes common problems like stopped VMs and blocked NSG rules.
 
 Usage:
     python enable_rdp.py --rg <rg-name> --vm <vm-name>
 
 Example:
     python enable_rdp.py --rg production-rg --vm web-server-01
+
+Auto-fix capabilities:
+    - Starts stopped VMs automatically
+    - Adds RDP allow rules to Network Security Groups
+    - Provides detailed AI analysis and recommendations
 """
 
 import argparse
@@ -262,6 +269,90 @@ class AzureRDPTroubleshooter:
                 "confidence": 0.0
             }
     
+    def fix_vm_power_state(self, resource_group: str, vm_name: str) -> Dict[str, Any]:
+        """Start a stopped VM"""
+        try:
+            logger.info(f"Starting VM: {vm_name}")
+            async_vm_start = self.compute_client.virtual_machines.begin_start(
+                resource_group_name=resource_group,
+                vm_name=vm_name
+            )
+            async_vm_start.wait()
+            
+            return {
+                'status': 'success',
+                'action': 'vm_started',
+                'message': f'VM {vm_name} started successfully'
+            }
+        except Exception as e:
+            logger.error(f"Error starting VM: {e}")
+            return {
+                'status': 'error',
+                'action': 'vm_start_failed',
+                'message': f'Failed to start VM: {str(e)}'
+            }
+    
+    def fix_nsg_rdp_rule(self, resource_group: str, vm_name: str) -> Dict[str, Any]:
+        """Add RDP allow rule to NSG"""
+        try:
+            # Get VM to find the NSG
+            vm = self.compute_client.virtual_machines.get(
+                resource_group_name=resource_group,
+                vm_name=vm_name
+            )
+            
+            # Get network interface
+            nic_id = vm.network_profile.network_interfaces[0].id
+            nic_name = nic_id.split('/')[-1]
+            
+            nic = self.network_client.network_interfaces.get(
+                resource_group_name=resource_group,
+                network_interface_name=nic_name
+            )
+            
+            # Get NSG
+            nsg_id = nic.network_security_group.id
+            nsg_name = nsg_id.split('/')[-1]
+            
+            logger.info(f"Adding RDP allow rule to NSG: {nsg_name}")
+            
+            # Create RDP allow rule
+            rdp_rule = {
+                'name': 'AllowRDP',
+                'priority': 500,  # Higher priority than DenyRDP (1000)
+                'direction': 'Inbound',
+                'access': 'Allow',
+                'protocol': 'Tcp',
+                'source_port_range': '*',
+                'destination_port_range': '3389',
+                'source_address_prefix': '*',
+                'destination_address_prefix': '*',
+                'description': 'Allow RDP access - Auto-created by Enable RDP Bot'
+            }
+            
+            # Add the rule
+            self.network_client.security_rules.begin_create_or_update(
+                resource_group_name=resource_group,
+                network_security_group_name=nsg_name,
+                security_rule_name='AllowRDP',
+                security_rule_parameters=rdp_rule
+            ).wait()
+            
+            return {
+                'status': 'success',
+                'action': 'nsg_rule_added',
+                'message': f'RDP allow rule added to NSG {nsg_name}',
+                'rule_details': rdp_rule
+            }
+            
+        except Exception as e:
+            logger.error(f"Error adding NSG rule: {e}")
+            return {
+                'status': 'error',
+                'action': 'nsg_rule_failed',
+                'message': f'Failed to add RDP rule: {str(e)}'
+            }
+    
     def troubleshoot_rdp(self, resource_group: str, vm_name: str) -> Dict[str, Any]:
         """Main troubleshooting workflow"""
         logger.info(f"Starting RDP troubleshooting for VM: {vm_name} in resource group: {resource_group}")
@@ -282,7 +373,22 @@ class AzureRDPTroubleshooter:
         # Step 3: AI Analysis
         ai_analysis = self.analyze_with_ai(vm_status, nsg_info)
         
-        # Step 4: Generate report
+        # Step 4: Auto-fix issues
+        fixes_applied = []
+        
+        # Fix VM power state if stopped
+        if vm_status.get('power_state') == 'deallocated':
+            logger.info("VM is stopped - attempting to start it")
+            vm_fix_result = self.fix_vm_power_state(resource_group, vm_name)
+            fixes_applied.append(vm_fix_result)
+        
+        # Fix NSG rules if RDP is blocked
+        if not nsg_info.get('rdp_allowed', False):
+            logger.info("RDP is blocked by NSG - attempting to add allow rule")
+            nsg_fix_result = self.fix_nsg_rdp_rule(resource_group, vm_name)
+            fixes_applied.append(nsg_fix_result)
+        
+        # Step 5: Generate report
         report = {
             'timestamp': datetime.now().isoformat(),
             'vm_name': vm_name,
@@ -290,6 +396,7 @@ class AzureRDPTroubleshooter:
             'vm_status': vm_status,
             'nsg_info': nsg_info,
             'ai_analysis': ai_analysis,
+            'fixes_applied': fixes_applied,
             'status': 'completed'
         }
         
@@ -297,7 +404,7 @@ class AzureRDPTroubleshooter:
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Enable RDP Bot - Diagnose and fix RDP connectivity issues on Azure VMs',
+        description='Enable RDP Bot - Diagnose and auto-fix RDP connectivity issues on Azure VMs',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Example:
