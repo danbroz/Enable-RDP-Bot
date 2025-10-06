@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-RESOURCE_GROUP="ai-support-bot-test-rg"
+RESOURCE_GROUP="test-rg"
 VM_NAME="example-vm"
 LOCATION="East US"
 VM_SIZE="Standard_B2s"
