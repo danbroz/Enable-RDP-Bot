@@ -75,7 +75,7 @@ This solution was created for a Microsoft Azure Supportability Test and includes
 
 5. **Test OpenAI API and model availability:**
    ```bash
-   python test_models.py
+   python enable_rdp.py --list-models
    ```
 
 ### Usage
