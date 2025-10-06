@@ -70,8 +70,8 @@ class AzureRDPTroubleshooter:
             return []
     
     def select_best_model(self) -> str:
-        """Select the best available model, preferring GPT-5"""
-        preferred_models = ["gpt-5", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"]
+        """Select the best available model, preferring reliable models"""
+        preferred_models = ["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"]
         
         for model in preferred_models:
             if model in self.available_models:
@@ -205,6 +205,18 @@ class AzureRDPTroubleshooter:
             # Parse AI response
             ai_response = response.choices[0].message.content
             logger.debug(f"Raw AI response: {ai_response}")
+            
+            # Check for empty response
+            if not ai_response or ai_response.strip() == "":
+                logger.warning("AI returned empty response")
+                return {
+                    "root_cause": "AI returned empty response - model may be unavailable or overloaded",
+                    "fix_steps": ["Try again later", "Check OpenAI service status", "Consider using a different model"],
+                    "prevention": ["Monitor AI service availability", "Use fallback models"],
+                    "priority": "High",
+                    "confidence": 0.0,
+                    "raw_response": ai_response
+                }
             
             try:
                 parsed_response = json.loads(ai_response)
