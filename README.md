@@ -68,10 +68,38 @@ This solution was created for a Microsoft Azure Supportability Test and includes
    # Edit .env with your Azure credentials
    ```
 
-4. **Run the demo**:
-   ```bash
-   python3 test_simulated_problem_vm.py
-   ```
+### Command-Line Tool (Recommended)
+
+**Use the professional CLI tool for RDP troubleshooting:**
+
+```bash
+# Basic RDP troubleshooting
+python3 enable_rdp.py --resource-group production-rg --vm web-server-01
+
+# Auto-fix RDP issues
+python3 enable_rdp.py --resource-group dev-rg --vm test-vm --auto-fix
+
+# Verbose output with detailed diagnostics
+python3 enable_rdp.py --resource-group prod-rg --vm app-server --verbose
+
+# JSON output for automation
+python3 enable_rdp.py --resource-group staging-rg --vm db-server --output json
+```
+
+**See all options:**
+```bash
+python3 enable_rdp.py --help
+```
+
+### Demo Scripts
+
+```bash
+# Run the CLI tool demo
+python3 demo_enable_rdp.py
+
+# Run the simulated problem VM test
+python3 test_simulated_problem_vm.py
+```
 
 ## 📁 Project Structure
 
@@ -91,7 +119,20 @@ This solution was created for a Microsoft Azure Supportability Test and includes
 
 ## 🧪 Testing
 
-### Simulated Problem VM Test (Recommended)
+### Command-Line Tool (Production Ready)
+```bash
+# Test with your own VMs
+python3 enable_rdp.py --resource-group your-rg --vm your-vm
+
+# See the demo
+python3 demo_enable_rdp.py
+```
+- Professional CLI tool for real-world use
+- Comprehensive VM diagnostics
+- AI-powered analysis and recommendations
+- Auto-fix capabilities
+
+### Simulated Problem VM Test
 ```bash
 python3 test_simulated_problem_vm.py
 ```
