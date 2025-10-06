@@ -98,7 +98,7 @@ class AzureRDPTroubleshooter:
                 'name': vm.name,
                 'location': vm.location,
                 'vm_size': vm.hardware_profile.vm_size,
-                'os_type': vm.storage_profile.os_disk.os_type.value if vm.storage_profile.os_disk.os_type else 'Unknown',
+                'os_type': str(vm.storage_profile.os_disk.os_type) if vm.storage_profile.os_disk.os_type else 'Unknown',
                 'power_state': 'Unknown',
                 'provisioning_state': vm.provisioning_state,
                 'network_interfaces': [nic.id for nic in vm.network_profile.network_interfaces]
