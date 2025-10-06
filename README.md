@@ -24,20 +24,7 @@ This solution was created for a Microsoft Azure Supportability Test and includes
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Enable RDP Bot                     │
-├─────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
-│  │   Azure     │  │   OpenAI    │  │   CLI       │    │
-│  │   SDK       │  │   API       │  │   Tool      │    │
-│  └─────────────┘  └─────────────┘  └─────────────┘    │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
-│  │   VM        │  │   Network   │  │   AI        │    │
-│  │ Inspector   │  │   Analysis  │  │ Analysis    │    │
-│  └─────────────┘  └─────────────┘  └─────────────┘    │
-└─────────────────────────────────────────────────────────┘
-```
+![Enable RDP Bot Architecture](Diagram.png)
 
 ## 🚀 Quick Start
 
@@ -79,16 +66,6 @@ This solution was created for a Microsoft Azure Supportability Test and includes
 ```bash
 python enable_rdp_bot.py --rg my-resource-group --vm my-vm-name
 ```
-
-### Auto-fix behavior
-
-The agent not only diagnoses but also auto-fixes common RDP issues:
-
-- Starts a deallocated VM
-- Ensures an `AllowRDP` inbound rule exists
-- Automatically sets `AllowRDP` priority to outrank any `DenyRDP` on port 3389 (e.g., if `DenyRDP` is `1000`, `AllowRDP` becomes `999`)
-
-The final JSON contains a `fixes_applied` section indicating created/updated rules and chosen priority.
 
 #### Command Line Options
 
