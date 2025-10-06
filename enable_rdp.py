@@ -204,13 +204,30 @@ class AzureRDPTroubleshooter:
             
             # Parse AI response
             ai_response = response.choices[0].message.content
+            logger.debug(f"Raw AI response: {ai_response}")
+            
             try:
-                return json.loads(ai_response)
-            except json.JSONDecodeError:
+                parsed_response = json.loads(ai_response)
+                # Validate that the response has the expected structure
+                required_fields = ["root_cause", "fix_steps", "prevention", "priority", "confidence"]
+                if all(field in parsed_response for field in required_fields):
+                    return parsed_response
+                else:
+                    logger.warning(f"AI response missing required fields. Got: {list(parsed_response.keys())}")
+                    return {
+                        "root_cause": "AI response missing required fields",
+                        "fix_steps": ["Check the AI response manually"],
+                        "prevention": ["Review AI response format"],
+                        "priority": "Medium",
+                        "confidence": 0.0,
+                        "raw_response": ai_response
+                    }
+            except json.JSONDecodeError as e:
+                logger.warning(f"Failed to parse AI response as JSON: {e}")
                 return {
-                    "root_cause": "Unable to parse AI response",
+                    "root_cause": "Unable to parse AI response as JSON",
                     "fix_steps": ["Check the AI response manually"],
-                    "prevention": ["Review AI response"],
+                    "prevention": ["Review AI response format"],
                     "priority": "Medium",
                     "confidence": 0.0,
                     "raw_response": ai_response
