@@ -70,7 +70,7 @@ python enable_rdp.py --resource-group my-rg --vm my-vm --verbose
 
 ### Step 3: AI-Powered Analysis
 
-The tool automatically runs AI analysis to identify root causes and provide recommendations.
+The tool automatically runs AI analysis using GPT-5 (with fallback to GPT-4) to identify root causes and provide recommendations.
 
 **AI Analysis Output:**
 ```json

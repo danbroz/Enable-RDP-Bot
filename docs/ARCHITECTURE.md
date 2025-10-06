@@ -13,7 +13,7 @@
 │  │   Azure     │  │   OpenAI    │  │   CLI       │    │
 │  │   SDK       │  │   API       │  │ Interface   │    │
 │  │             │  │             │  │             │    │
-│  │ • Compute   │  │ • GPT-4     │  │ • argparse  │    │
+│  │ • Compute   │  │ • GPT-5     │  │ • argparse  │    │
 │  │ • Network   │  │ • Analysis  │  │ • logging   │    │
 │  │ • Resource  │  │ • JSON      │  │ • output    │    │
 │  └─────────────┘  └─────────────┘  └─────────────┘    │
@@ -55,10 +55,11 @@ for rule in nsg.security_rules:
 
 ### 2. OpenAI API Integration Layer
 
-**Purpose**: AI-powered analysis and recommendations
+**Purpose**: AI-powered analysis and recommendations with intelligent model selection
 
 **Components**:
-- `OpenAI Client`: GPT-4 model integration
+- `OpenAI Client`: GPT-5 model integration (with fallback to GPT-4)
+- `Model Selection`: Automatic model detection and selection
 - `Prompt Engineering`: Structured prompts for RDP troubleshooting
 - `Response Parsing`: JSON response validation and processing
 
@@ -66,7 +67,7 @@ for rule in nsg.security_rules:
 ```python
 # AI Analysis
 response = openai_client.chat.completions.create(
-    model="gpt-4",
+    model=self.model,  # Automatically selected (GPT-5 preferred)
     messages=[
         {"role": "system", "content": "You are an expert Azure RDP troubleshooting specialist."},
         {"role": "user", "content": f"Analyze: {context}"}
@@ -74,6 +75,18 @@ response = openai_client.chat.completions.create(
     temperature=0.3,
     max_tokens=1000
 )
+```
+
+**Model Selection Logic**:
+```python
+# Automatic model selection with fallback hierarchy
+preferred_models = ["gpt-5", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"]
+
+def select_best_model(self) -> str:
+    for model in preferred_models:
+        if model in self.available_models:
+            return model
+    return "gpt-4"  # Ultimate fallback
 ```
 
 ### 3. CLI Interface Layer

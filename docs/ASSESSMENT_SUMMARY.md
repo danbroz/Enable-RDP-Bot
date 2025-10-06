@@ -13,7 +13,7 @@
 **Architecture Components:**
 - **Azure CLI Authentication**: Secure authentication using Azure CLI
 - **Azure SDK Integration**: VM and network management via Azure SDK
-- **OpenAI API Integration**: GPT-4 powered analysis and recommendations
+- **OpenAI API Integration**: GPT-5 powered analysis and recommendations (with fallback to GPT-4)
 - **CLI Tool Interface**: Command-line interface for troubleshooting
 - **Logging & Output**: JSON output and file logging capabilities
 
@@ -45,7 +45,7 @@ python enable_rdp.py --resource-group <rg> --vm <vm-name>
 1. **Authentication**: Verify Azure CLI login and OpenAI API key
 2. **VM Status Check**: Retrieve VM power state, size, and configuration
 3. **Network Analysis**: Check NSG rules for RDP port 3389
-4. **AI Analysis**: GPT-4 analyzes findings and provides recommendations
+4. **AI Analysis**: GPT-5 analyzes findings and provides recommendations
 5. **Output Generation**: JSON report with root cause and fix steps
 6. **Resolution**: Manual or automated fix application (with --auto-fix flag)
 
@@ -136,7 +136,7 @@ python enable_rdp.py --resource-group <rg> --vm <vm-name>
 
 **Core Technologies:**
 - Python 3.9+ with Azure SDK
-- OpenAI GPT-4 API integration
+- OpenAI GPT-5 API integration (with fallback to GPT-4)
 - Azure CLI for authentication
 - JSON output format
 - Command-line interface
