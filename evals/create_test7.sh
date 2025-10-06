@@ -113,6 +113,7 @@ az vm create \
     --image Win2019Datacenter \
     --admin-username $ADMIN_USERNAME \
     --admin-password $ADMIN_PASSWORD \
+    --public-ip-sku Standard \
     --public-ip-sku Standard > /dev/null
 
 # Get VM details

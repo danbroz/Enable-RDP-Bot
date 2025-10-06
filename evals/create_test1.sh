@@ -136,6 +136,7 @@ az vm create \
     --image "Win2019Datacenter" \
     --admin-username $ADMIN_USERNAME \
     --admin-password $ADMIN_PASSWORD \
+    --public-ip-sku Standard \
     --tags Purpose="AI Support Bot Testing" Problem="RDP Blocked" Status="Will be stopped"
 
 echo -e "${GREEN}✅ Windows VM created${NC}"
