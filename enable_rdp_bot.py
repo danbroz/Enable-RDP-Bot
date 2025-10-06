@@ -121,10 +121,10 @@ class AzureRDPTroubleshooter:
             return {'error': str(e)}
     
     def check_nsg_rules(self, resource_group: str, vm_name: str) -> Dict[str, Any]:
-        """Check Network Security Group rules for RDP (port 3389)"""
+        """Check Network Security Group rules for RDP (port 3389), including priorities"""
         try:
             vm = self.compute_client.virtual_machines.get(resource_group, vm_name)
-            nsg_info = {'rdp_allowed': False, 'rules': []}
+            nsg_info = {'rdp_allowed': False, 'rules': [], 'rdp_conflict': False, 'allow_priority': None, 'deny_priority': None}
             
             for nic_ref in vm.network_profile.network_interfaces:
                 nic_name = nic_ref.id.split('/')[-1]
@@ -151,6 +151,7 @@ class AzureRDPTroubleshooter:
                                 'name': rule.name,
                                 'access': access,
                                 'direction': direction,
+                                'priority': getattr(rule, 'priority', None),
                                 'source': getattr(rule, 'source_address_prefix', None),
                                 'destination': getattr(rule, 'destination_address_prefix', None),
                                 'protocol': protocol
@@ -158,6 +159,19 @@ class AzureRDPTroubleshooter:
                             
                             if access == 'Allow' and direction == 'Inbound':
                                 nsg_info['rdp_allowed'] = True
+
+                            # Track priorities to detect conflicts (lower number = higher precedence)
+                            if access == 'Allow' and direction == 'Inbound' and getattr(rule, 'priority', None) is not None:
+                                if nsg_info['allow_priority'] is None or rule.priority < nsg_info['allow_priority']:
+                                    nsg_info['allow_priority'] = rule.priority
+                            if access == 'Deny' and direction == 'Inbound' and getattr(rule, 'priority', None) is not None:
+                                if nsg_info['deny_priority'] is None or rule.priority < nsg_info['deny_priority']:
+                                    nsg_info['deny_priority'] = rule.priority
+
+                    # After scanning rules, detect conflict: a Deny with higher precedence than Allow
+                    if nsg_info['allow_priority'] is not None and nsg_info['deny_priority'] is not None:
+                        if nsg_info['deny_priority'] < nsg_info['allow_priority']:
+                            nsg_info['rdp_conflict'] = True
             
             return nsg_info
         except Exception as e:
@@ -292,8 +306,8 @@ class AzureRDPTroubleshooter:
                 'message': f'Failed to start VM: {str(e)}'
             }
     
-    def fix_nsg_rdp_rule(self, resource_group: str, vm_name: str) -> Dict[str, Any]:
-        """Add RDP allow rule to NSG"""
+    def fix_nsg_rdp_rule(self, resource_group: str, vm_name: str, desired_priority: Optional[int] = None) -> Dict[str, Any]:
+        """Ensure NSG allows inbound RDP by creating or updating an allow rule with proper priority"""
         try:
             # Get VM to find the NSG
             vm = self.compute_client.virtual_machines.get(
@@ -314,12 +328,42 @@ class AzureRDPTroubleshooter:
             nsg_id = nic.network_security_group.id
             nsg_name = nsg_id.split('/')[-1]
             
-            logger.info(f"Adding RDP allow rule to NSG: {nsg_name}")
-            
-            # Create RDP allow rule
+            logger.info(f"Ensuring RDP allow rule on NSG: {nsg_name}")
+
+            # Determine target priority
+            # If not provided, try to set to 500 by default
+            target_priority = desired_priority if desired_priority is not None else 500
+
+            # Inspect existing rules for AllowRDP and conflicting Deny
+            nsg = self.network_client.network_security_groups.get(resource_group, nsg_name)
+            existing_allow = None
+            highest_precedence_deny = None
+            for rule in nsg.security_rules or []:
+                destination_port_range = getattr(rule, 'destination_port_range', None)
+                destination_port_ranges = getattr(rule, 'destination_port_ranges', None) or []
+                has_rdp = (destination_port_range == '3389' or ('3389' in destination_port_ranges))
+                if not has_rdp:
+                    continue
+                access = getattr(rule.access, 'value', rule.access)
+                direction = getattr(rule.direction, 'value', rule.direction)
+                if direction != 'Inbound':
+                    continue
+                if access == 'Allow':
+                    existing_allow = rule
+                if access == 'Deny':
+                    if highest_precedence_deny is None or (getattr(rule, 'priority', 4096) < getattr(highest_precedence_deny, 'priority', 4096)):
+                        highest_precedence_deny = rule
+
+            # If there is a deny with higher precedence, set target_priority to just above it
+            if highest_precedence_deny is not None and getattr(highest_precedence_deny, 'priority', None) is not None:
+                deny_pri = highest_precedence_deny.priority
+                # choose a lower number (higher precedence) than the deny, but >= 100
+                target_priority = max(100, min(deny_pri - 1, target_priority))
+
+            # Build rule payload
             rdp_rule = {
                 'name': 'AllowRDP',
-                'priority': 500,  # Higher priority than DenyRDP (1000)
+                'priority': target_priority,
                 'direction': 'Inbound',
                 'access': 'Allow',
                 'protocol': 'Tcp',
@@ -327,21 +371,22 @@ class AzureRDPTroubleshooter:
                 'destination_port_range': '3389',
                 'source_address_prefix': '*',
                 'destination_address_prefix': '*',
-                'description': 'Allow RDP access - Auto-created by Enable RDP Bot'
+                'description': 'Allow RDP access - Managed by Enable RDP Bot'
             }
-            
-            # Add the rule
+
+            # Create or update AllowRDP
             self.network_client.security_rules.begin_create_or_update(
                 resource_group_name=resource_group,
                 network_security_group_name=nsg_name,
                 security_rule_name='AllowRDP',
                 security_rule_parameters=rdp_rule
             ).wait()
-            
+
+            action = 'nsg_rule_added' if existing_allow is None else 'nsg_rule_updated'
             return {
                 'status': 'success',
-                'action': 'nsg_rule_added',
-                'message': f'RDP allow rule added to NSG {nsg_name}',
+                'action': action,
+                'message': f"RDP allow rule {'created' if existing_allow is None else 'updated'} on NSG {nsg_name} with priority {target_priority}",
                 'rule_details': rdp_rule
             }
             
@@ -382,10 +427,14 @@ class AzureRDPTroubleshooter:
             vm_fix_result = self.fix_vm_power_state(resource_group, vm_name)
             fixes_applied.append(vm_fix_result)
         
-        # Fix NSG rules if RDP is blocked
-        if not nsg_info.get('rdp_allowed', False):
-            logger.info("RDP is blocked by NSG - attempting to add allow rule")
-            nsg_fix_result = self.fix_nsg_rdp_rule(resource_group, vm_name)
+        # Fix NSG rules if RDP is blocked or conflict detected
+        if (not nsg_info.get('rdp_allowed', False)) or nsg_info.get('rdp_conflict', False):
+            logger.info("Ensuring NSG allows RDP - creating or updating allow rule with correct priority")
+            desired_priority = None
+            # If we detected a deny with higher precedence, choose a priority just above it
+            if nsg_info.get('deny_priority') is not None:
+                desired_priority = max(100, nsg_info['deny_priority'] - 1)
+            nsg_fix_result = self.fix_nsg_rdp_rule(resource_group, vm_name, desired_priority)
             fixes_applied.append(nsg_fix_result)
         
         # Step 5: Generate report
