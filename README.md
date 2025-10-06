@@ -73,10 +73,6 @@ This solution was created for a Microsoft Azure Supportability Test and includes
    az account set --subscription "your-subscription-id"
    ```
 
-5. **Test the tool:**
-   ```bash
-   python enable_rdp.py --rg my-resource-group --vm my-vm-name
-   ```
 
 ### Usage
 
