@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Enable RDP Bot - Azure CLI Script to Clean Up Example VM
-# This script removes the test VM and all associated resources
+# Enable RDP Bot - Cleanup Test Case 2
+# This script removes the test2 VM and all associated resources
 
 set -e
 
@@ -13,11 +13,11 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-RESOURCE_GROUP="example-resource-group"
+RESOURCE_GROUP="test2-resource-group"
 
-echo -e "${BLUE}🧹 Enable RDP Bot - Cleaning Up Example VM${NC}"
+echo -e "${BLUE}🧹 Enable RDP Bot - Cleaning Up Test Case 2${NC}"
 echo "=============================================="
-echo "This script will remove the test VM and all associated resources."
+echo "This script will remove the test2 VM and all associated resources."
 echo ""
 
 # Check if Azure CLI is installed
@@ -73,7 +73,7 @@ echo "   Status: Deletion in progress"
 echo "   Note: This may take a few minutes to complete"
 echo ""
 echo -e "${GREEN}🎉 Cleanup completed!${NC}"
-echo "The example VM and all associated resources are being removed."
+echo "The test2 VM and all associated resources are being removed."
 echo ""
 echo -e "${YELLOW}💡 Tip: You can check the deletion status with:${NC}"
 echo "   az group show --name $RESOURCE_GROUP"

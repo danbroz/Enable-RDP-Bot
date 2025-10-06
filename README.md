@@ -74,18 +74,28 @@ python enable_rdp_bot.py --rg my-resource-group --vm my-vm-name
 
 ## 🧪 Testing
 
-### Create Test VM
+The `evals/` directory contains comprehensive test cases for evaluating the bot's auto-fix capabilities.
+
+### Test Cases
+
+- **Test Case 1:** RDP blocked + VM stopped
+- **Test Case 2:** Conflicting NSG rules  
+- **Test Case 3:** No RDP rules (default deny)
+
+### Quick Test
 
 ```bash
-# Create a test VM with RDP issues
-./create_example_vm.sh
+# Create test environment
+./evals/create_test1.sh
 
-# Test the tool
-python enable_rdp_bot.py --rg example-resource-group --vm example-vm
+# Test the bot
+python enable_rdp_bot.py --rg test1-resource-group --vm test1-vm
 
 # Clean up
-./cleanup_example_vm.sh
+./evals/cleanup_test1.sh
 ```
+
+See [evals/README.md](evals/README.md) for detailed test case documentation.
 
 ## 🧠 AI-Powered Analysis
 

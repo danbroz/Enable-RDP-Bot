@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Enable RDP Bot - Azure CLI Script to Create Example VM
-# This script creates a Windows VM with intentional RDP issues for testing
+# Enable RDP Bot - Test Case 1: RDP Blocked + VM Stopped
+# This script creates a Windows VM with RDP blocked by NSG and VM stopped
 
 set -e
 
@@ -13,17 +13,17 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-RESOURCE_GROUP="example-resource-group"
-VM_NAME="example-vm"
+RESOURCE_GROUP="test1-resource-group"
+VM_NAME="test1-vm"
 LOCATION="East US"
 VM_SIZE="Standard_B2s"
 ADMIN_USERNAME="azureuser"
 ADMIN_PASSWORD="AzurePassword123!"
 
-echo -e "${BLUE}🚀 Enable RDP Bot - Creating Example VM${NC}"
+echo -e "${BLUE}🚀 Enable RDP Bot - Test Case 1: RDP Blocked + VM Stopped${NC}"
 echo "=================================================="
-echo "This script will create a Windows VM with intentional RDP issues"
-echo "for testing the Enable RDP Bot."
+echo "This script creates a Windows VM with RDP blocked by NSG and VM stopped"
+echo "for testing the Enable RDP Bot's auto-fix capabilities."
 echo ""
 
 # Check if Azure CLI is installed
@@ -179,9 +179,9 @@ echo "   3. VM has limited resources (Standard_B2s)"
 
 echo ""
 echo -e "${BLUE}🧪 Testing Instructions:${NC}"
-echo "   1. Run: python3 enable_rdp_bot.py --resource-group $RESOURCE_GROUP --vm $VM_NAME"
+echo "   1. Run: python3 enable_rdp_bot.py --rg $RESOURCE_GROUP --vm $VM_NAME"
 echo "   2. The Enable RDP Bot will detect the RDP blocking and VM stopped issues"
-echo "   3. AI will provide specific remediation steps"
+echo "   3. Bot will auto-fix both issues: start VM and add AllowRDP rule"
 
 echo ""
 echo -e "${YELLOW}🔧 Manual Verification:${NC}"
