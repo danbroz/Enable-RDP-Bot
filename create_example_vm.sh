@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-RESOURCE_GROUP="test-rg"
+RESOURCE_GROUP="example-resource-group"
 VM_NAME="example-vm"
 LOCATION="East US"
 VM_SIZE="Standard_B2s"

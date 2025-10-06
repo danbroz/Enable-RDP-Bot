@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-RESOURCE_GROUP="test-rg"
+RESOURCE_GROUP="example-resource-group"
 
 echo -e "${BLUE}🧹 Enable RDP Bot - Cleaning Up Example VM${NC}"
 echo "=============================================="
