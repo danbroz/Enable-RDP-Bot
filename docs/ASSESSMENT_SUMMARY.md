@@ -1,12 +1,12 @@
-# Microsoft Azure Supportability Test - Assessment Summary
+# Enable RDP Bot - Project Summary
 
-## 📋 Assessment Overview
+## 📋 Project Overview
 
-**Assessment Question**: Agentic AI for Azure Supportability Test  
-**Scenario**: Windows VM not responding to RDP (3389)  
-**Deliverable**: AI-agent architecture and end-to-end customer flow to resolution (≤ 2 pages)
+**Project**: Enable RDP Bot - AI-Powered Azure RDP Troubleshooting Tool  
+**Purpose**: Diagnose and fix RDP connectivity issues on Azure VMs  
+**Technology**: AI-agent architecture with end-to-end troubleshooting workflow
 
-## ✅ Assessment Deliverables
+## ✅ Project Components
 
 ### 1. Reference Architecture Diagram + Description
 
@@ -38,7 +38,7 @@
 
 **Entry Point**: Command-line interface
 ```
-python enable_rdp.py --resource-group <rg> --vm <vm-name>
+python enable_rdp.py --rg <rg> --vm <vm-name>
 ```
 
 **Flow Steps:**
@@ -47,12 +47,11 @@ python enable_rdp.py --resource-group <rg> --vm <vm-name>
 3. **Network Analysis**: Check NSG rules for RDP port 3389
 4. **AI Analysis**: GPT-5 analyzes findings and provides recommendations
 5. **Output Generation**: JSON report with root cause and fix steps
-6. **Resolution**: Manual or automated fix application (with --auto-fix flag)
+6. **Resolution**: Manual fix application based on AI recommendations
 
 **Exit Points:**
 - Success: Complete diagnostic report with recommendations
 - Error: Detailed error message with troubleshooting steps
-- Auto-fix: Applied fixes with verification results
 
 ### 3. Troubleshooting Play for Windows VM RDP Failures
 
@@ -120,17 +119,17 @@ python enable_rdp.py --resource-group <rg> --vm <vm-name>
 
 ## 🎯 Solution Benefits
 
-**For Microsoft Assessment:**
-- Demonstrates practical AI integration for Azure support
-- Shows understanding of Azure services and security
-- Provides real-world troubleshooting capabilities
-- Implements Microsoft-centric tools and frameworks
-
-**For Production Use:**
+**For Azure Administrators:**
 - Simple, focused tool for RDP troubleshooting
 - Minimal setup and configuration
-- Scalable architecture for additional diagnostic types
+- AI-powered analysis for faster problem resolution
 - Clear documentation and usage examples
+
+**For Production Use:**
+- Scalable architecture for additional diagnostic types
+- Comprehensive logging and monitoring
+- Secure authentication and data handling
+- Easy integration with existing workflows
 
 ## 📊 Technical Implementation
 
@@ -148,13 +147,13 @@ python enable_rdp.py --resource-group <rg> --vm <vm-name>
 - Configurable output formats
 - Extensible architecture
 
-## 🚀 Assessment Completion
+## 🚀 Project Completion
 
-This solution successfully addresses all assessment requirements:
+This solution successfully provides:
 - ✅ Reference architecture with clear component descriptions
 - ✅ End-to-end customer flow from entry to resolution
-- ✅ Comprehensive troubleshooting play for RDP failures
+- ✅ Comprehensive troubleshooting procedures for RDP failures
 - ✅ Robust safety, security, and governance framework
 - ✅ Complete observability and metrics implementation
 
-The solution demonstrates practical AI integration for Azure support scenarios while maintaining security, simplicity, and effectiveness.
+The solution demonstrates practical AI integration for Azure troubleshooting scenarios while maintaining security, simplicity, and effectiveness.

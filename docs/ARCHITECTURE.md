@@ -1,5 +1,9 @@
 # Enable RDP Bot - Architecture Documentation
 
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+
 ## 🏗️ System Architecture
 
 ### High-Level Architecture
@@ -101,10 +105,8 @@ def select_best_model(self) -> str:
 **Key Operations**:
 ```python
 # Command Line Interface
-parser.add_argument('--resource-group', required=True)
+parser.add_argument('--rg', required=True)
 parser.add_argument('--vm', required=True)
-parser.add_argument('--auto-fix', action='store_true')
-parser.add_argument('--verbose', action='store_true')
 ```
 
 ## 🔄 Data Flow Architecture

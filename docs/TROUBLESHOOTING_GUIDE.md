@@ -1,5 +1,9 @@
 # RDP Troubleshooting Guide
 
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+
 ## 🎯 Overview
 
 This guide provides comprehensive procedures for troubleshooting Windows VM RDP connectivity issues using the Enable RDP Bot tool.
@@ -36,7 +40,7 @@ This guide provides comprehensive procedures for troubleshooting Windows VM RDP 
 
 ```bash
 # Check VM status
-python enable_rdp.py --resource-group my-rg --vm my-vm --verbose
+python enable_rdp.py --rg my-rg --vm my-vm
 ```
 
 **What to Look For:**
@@ -54,7 +58,7 @@ python enable_rdp.py --resource-group my-rg --vm my-vm --verbose
 
 ```bash
 # Detailed NSG analysis
-python enable_rdp.py --resource-group my-rg --vm my-vm --verbose
+python enable_rdp.py --rg my-rg --vm my-vm
 ```
 
 **What to Look For:**
@@ -232,7 +236,7 @@ az vm extension list --resource-group my-rg --vm-name my-vm
 ### Comprehensive VM Check
 ```bash
 # Full diagnostic run
-python enable_rdp.py --resource-group my-rg --vm my-vm --verbose --output diagnostic-report.json
+python enable_rdp.py --rg my-rg --vm my-vm
 ```
 
 ### Network Connectivity Test
@@ -341,20 +345,20 @@ nmap -p 3389 <vm-public-ip>
 ```bash
 # Process multiple VMs
 for vm in vm1 vm2 vm3; do
-  python enable_rdp.py --resource-group my-rg --vm $vm --output $vm-report.json
+  python enable_rdp.py --rg my-rg --vm $vm
 done
 ```
 
 ### Scheduled Monitoring
 ```bash
 # Daily RDP health check
-0 9 * * * /path/to/enable_rdp.py --resource-group prod-rg --vm web-server --output daily-check.json
+0 9 * * * /path/to/enable_rdp.py --rg prod-rg --vm web-server
 ```
 
 ### Integration with CI/CD
 ```yaml
 # Azure DevOps pipeline step
 - script: |
-    python enable_rdp.py --resource-group $(resourceGroup) --vm $(vmName) --output rdp-check.json
+    python enable_rdp.py --rg $(resourceGroup) --vm $(vmName)
   displayName: 'RDP Health Check'
 ```

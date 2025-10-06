@@ -1,5 +1,9 @@
 # Security and Governance Plan
 
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+
 ## 🛡️ Security Overview
 
 The Enable RDP Bot implements enterprise-grade security measures to ensure safe and compliant operation in Azure environments.

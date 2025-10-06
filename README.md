@@ -164,11 +164,7 @@ The tool provides detailed logging output by default, showing all diagnostic ste
 
 ## 📝 License
 
-This project is created for assessment purposes.
-
-## 🤝 Contributing
-
-This is an assessment project. For questions or issues, please contact the maintainer.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 📚 Documentation
 
