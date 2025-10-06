@@ -484,8 +484,28 @@ class AzureRDPTroubleshooter:
             # Lower numbers = higher precedence in Azure NSG
             if highest_precedence_deny is not None and getattr(highest_precedence_deny, 'priority', None) is not None:
                 deny_pri = highest_precedence_deny.priority
-                # Set priority to be higher precedence (lower number) than the deny rule, but >= 100
-                target_priority = max(100, min(deny_pri - 1, target_priority))
+                # Set priority to be higher precedence (lower number) than the deny rule
+                # Must be lower than the deny rule to have higher precedence
+                target_priority = deny_pri - 1
+                # Ensure we don't go below the minimum priority of 100
+                if target_priority < 100:
+                    # If we can't go lower than 100, we need to delete the deny rule instead
+                    logger.warning(f"Cannot set priority lower than 100 to outrank deny rule at priority {deny_pri}")
+                    # For now, we'll try to delete the deny rule
+                    try:
+                        self.network_client.security_rules.begin_delete(
+                            resource_group_name=resource_group,
+                            network_security_group_name=nsg_name,
+                            security_rule_name=highest_precedence_deny.name
+                        ).wait()
+                        logger.info(f"Deleted conflicting deny rule: {highest_precedence_deny.name}")
+                        # Reset target priority to default since we removed the conflict
+                        target_priority = 500
+                    except Exception as e:
+                        logger.error(f"Failed to delete deny rule: {e}")
+                        # Fall back to trying priority 100 (will likely fail)
+                        target_priority = 100
+                logger.info(f"Adjusted target priority to {target_priority} to outrank deny rule at priority {deny_pri}")
 
             # Build the RDP allow rule configuration
             rdp_rule = {
@@ -500,6 +520,16 @@ class AzureRDPTroubleshooter:
                 'destination_address_prefix': '*',
                 'description': 'Allow RDP access - Managed by Enable RDP Bot'
             }
+
+            # Handle priority conflicts by deleting and recreating the rule
+            # Azure doesn't allow updating a rule to have the same priority as an existing rule
+            if existing_allow is not None and existing_allow.priority != target_priority:
+                logger.info(f"Deleting existing AllowRDP rule with priority {existing_allow.priority} to resolve conflict")
+                self.network_client.security_rules.begin_delete(
+                    resource_group_name=resource_group,
+                    network_security_group_name=nsg_name,
+                    security_rule_name='AllowRDP'
+                ).wait()
 
             # Create or update the AllowRDP rule
             self.network_client.security_rules.begin_create_or_update(
