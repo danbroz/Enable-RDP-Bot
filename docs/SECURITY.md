@@ -274,16 +274,4 @@ chmod 600 .env  # Restrict .env file permissions
 - **Continuous Monitoring**: Real-time security monitoring
 - **Regular Updates**: Keep all components updated
 
-## 📞 Security Support
 
-### Security Contacts
-- **Primary**: security@company.com
-- **Emergency**: +1-XXX-XXX-XXXX
-- **Azure Security**: Azure support portal
-- **OpenAI Security**: OpenAI security team
-
-### Security Resources
-- **Documentation**: Internal security documentation
-- **Training**: Security awareness training materials
-- **Tools**: Security tools and utilities
-- **Community**: Security community and forums
