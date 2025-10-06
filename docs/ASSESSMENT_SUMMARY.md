@@ -38,7 +38,7 @@
 
 **Entry Point**: Command-line interface
 ```
-python enable_rdp.py --rg <rg> --vm <vm-name>
+python enable_rdp_bot.py --rg <rg> --vm <vm-name>
 ```
 
 **Flow Steps:**

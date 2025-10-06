@@ -77,7 +77,7 @@ This solution was created for a Microsoft Azure Supportability Test and includes
 ### Usage
 
 ```bash
-python enable_rdp.py --rg my-resource-group --vm my-vm-name
+python enable_rdp_bot.py --rg my-resource-group --vm my-vm-name
 ```
 
 #### Command Line Options
@@ -94,7 +94,7 @@ python enable_rdp.py --rg my-resource-group --vm my-vm-name
 ./create_example_vm.sh
 
 # Test the tool
-python enable_rdp.py --rg example-resource-group --vm example-vm
+python enable_rdp_bot.py --rg example-resource-group --vm example-vm
 
 # Clean up
 ./cleanup_example_vm.sh

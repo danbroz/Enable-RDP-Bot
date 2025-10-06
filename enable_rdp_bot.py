@@ -6,10 +6,10 @@ This tool diagnoses RDP connectivity issues on Azure Virtual Machines and automa
 fixes common problems like stopped VMs and blocked NSG rules.
 
 Usage:
-    python enable_rdp.py --rg <rg-name> --vm <vm-name>
+    python enable_rdp_bot.py --rg <rg-name> --vm <vm-name>
 
 Example:
-    python enable_rdp.py --rg production-rg --vm web-server-01
+    python enable_rdp_bot.py --rg production-rg --vm web-server-01
 
 Auto-fix capabilities:
     - Starts stopped VMs automatically
@@ -408,7 +408,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Example:
-  python enable_rdp.py --rg production-rg --vm web-server-01
+  python enable_rdp_bot.py --rg production-rg --vm web-server-01
         """
     )
     

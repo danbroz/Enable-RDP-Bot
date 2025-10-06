@@ -40,7 +40,7 @@ This guide provides comprehensive procedures for troubleshooting Windows VM RDP 
 
 ```bash
 # Check VM status
-python enable_rdp.py --rg my-rg --vm my-vm
+python enable_rdp_bot.py --rg my-rg --vm my-vm
 ```
 
 **What to Look For:**
@@ -58,7 +58,7 @@ python enable_rdp.py --rg my-rg --vm my-vm
 
 ```bash
 # Detailed NSG analysis
-python enable_rdp.py --rg my-rg --vm my-vm
+python enable_rdp_bot.py --rg my-rg --vm my-vm
 ```
 
 **What to Look For:**
@@ -236,7 +236,7 @@ az vm extension list --resource-group my-rg --vm-name my-vm
 ### Comprehensive VM Check
 ```bash
 # Full diagnostic run
-python enable_rdp.py --rg my-rg --vm my-vm
+python enable_rdp_bot.py --rg my-rg --vm my-vm
 ```
 
 ### Network Connectivity Test
@@ -345,20 +345,20 @@ nmap -p 3389 <vm-public-ip>
 ```bash
 # Process multiple VMs
 for vm in vm1 vm2 vm3; do
-  python enable_rdp.py --rg my-rg --vm $vm
+  python enable_rdp_bot.py --rg my-rg --vm $vm
 done
 ```
 
 ### Scheduled Monitoring
 ```bash
 # Daily RDP health check
-0 9 * * * /path/to/enable_rdp.py --rg prod-rg --vm web-server
+0 9 * * * /path/to/enable_rdp_bot.py --rg prod-rg --vm web-server
 ```
 
 ### Integration with CI/CD
 ```yaml
 # Azure DevOps pipeline step
 - script: |
-    python enable_rdp.py --rg $(resourceGroup) --vm $(vmName)
+    python enable_rdp_bot.py --rg $(resourceGroup) --vm $(vmName)
   displayName: 'RDP Health Check'
 ```

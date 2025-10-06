@@ -138,7 +138,7 @@ chmod 600 .env  # Restrict .env file permissions
 ```
 
 ### File Permissions
-- **Script Permissions**: `chmod 755 enable_rdp.py`
+- **Script Permissions**: `chmod 755 enable_rdp_bot.py`
 - **Config Files**: `chmod 600 .env`
 - **Log Files**: `chmod 644 *.log`
 - **Output Files**: `chmod 644 *.json`
