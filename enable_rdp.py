@@ -199,7 +199,6 @@ class AzureRDPTroubleshooter:
                     {"role": "system", "content": "You are an expert Azure RDP troubleshooting specialist. Provide clear, actionable recommendations in JSON format."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.3,
                 max_completion_tokens=1000
             )
             
