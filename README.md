@@ -110,11 +110,12 @@ python3 test_simulated_problem_vm.py
 │   ├── memory/            # Conversation storage
 │   ├── plugins/           # Azure diagnostic plugins
 │   └── safety/            # Content safety
-├── terraform/             # Infrastructure as code
 ├── docs/                  # Documentation
 ├── tests/                 # Test scenarios
 ├── prompts/               # AI prompt templates
-└── config/                # Configuration files
+├── config/                # Configuration files
+├── create_example_vm.sh   # Azure CLI script to create test VM
+└── cleanup_example_vm.sh  # Azure CLI script to clean up test VM
 ```
 
 ## 🧪 Testing
@@ -156,22 +157,22 @@ python3 final_demo.py
 - Shows all capabilities
 - Production-ready examples
 
-## 🏗️ Infrastructure Deployment
+## 🏗️ Example VM Setup
 
-### Using Terraform
+### Create Test VM with Azure CLI
 ```bash
-cd terraform/
-terraform init
-terraform plan
-terraform apply
+# Create a Windows VM with intentional RDP issues for testing
+./create_example_vm.sh
+
+# Clean up the test VM when done
+./cleanup_example_vm.sh
 ```
 
-### Using Azure CLI
-```bash
-az login
-az account set --subscription "your-subscription-id"
-./deploy.sh
-```
+The example VM script creates:
+- Windows Server 2019 VM
+- Network Security Group with RDP port 3389 **BLOCKED** (intentional problem)
+- VM in **STOPPED** state (intentional problem)
+- All resources needed for testing the RDP troubleshooting agent
 
 ## 📊 Demo Results
 

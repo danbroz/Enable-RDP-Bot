@@ -1,1 +1,2 @@
-terraform/.terraform/
+# Azure CLI temporary files
+*.log
