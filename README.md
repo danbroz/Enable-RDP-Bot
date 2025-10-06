@@ -8,7 +8,7 @@ A simple command-line tool for diagnosing and fixing RDP connectivity issues on 
 
 - **🔍 VM Diagnostics**: Check VM status, power state, and configuration
 - **🌐 Network Analysis**: Analyze NSG rules and network connectivity
-- **🧠 AI-Powered Analysis**: OpenAI GPT-4 integration for intelligent troubleshooting
+- **🧠 AI-Powered Analysis**: OpenAI GPT-5 integration for intelligent troubleshooting (with fallback to GPT-4)
 - **☁️ Azure Native**: Built with Azure SDK and Azure CLI authentication
 - **⚡ Simple & Fast**: Command-line tool with minimal setup
 
@@ -95,6 +95,9 @@ python enable_rdp.py --resource-group prod-rg --vm app-server --output report.js
 
 # Specify subscription ID
 python enable_rdp.py --resource-group my-rg --vm my-vm --subscription-id "your-subscription-id"
+
+# List available OpenAI models
+python enable_rdp.py --list-models
 ```
 
 #### Command Line Options
@@ -105,6 +108,7 @@ python enable_rdp.py --resource-group my-rg --vm my-vm --subscription-id "your-s
 - `--auto-fix, -a`: Automatically apply fixes (use with caution)
 - `--verbose, -V`: Enable verbose logging
 - `--output, -o`: Output file for results (JSON format)
+- `--list-models`: List available OpenAI models and exit
 
 ## 🧪 Testing
 
@@ -120,6 +124,24 @@ python enable_rdp.py --resource-group example-resource-group --vm example-vm
 # Clean up
 ./cleanup_example_vm.sh
 ```
+
+## 🧠 AI-Powered Analysis
+
+The tool automatically runs AI analysis using GPT-5 (with fallback to GPT-4) to identify root causes and provide recommendations.
+
+### Model Selection
+The tool automatically selects the best available model in this order:
+1. **GPT-5** (preferred) - Latest model with enhanced reasoning capabilities
+2. **GPT-4 Turbo** - High-performance model with extended context
+3. **GPT-4** - Standard high-quality model
+4. **GPT-3.5 Turbo** - Fast and efficient model
+
+### Check Available Models
+```bash
+python enable_rdp.py --list-models
+```
+
+This will show all available OpenAI models and indicate which one is selected.
 
 ## 📊 Output Format
 

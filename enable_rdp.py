@@ -57,6 +57,40 @@ class AzureRDPTroubleshooter:
             raise ValueError("OPENAI_API_KEY environment variable is required")
         
         self.openai_client = openai.OpenAI(api_key=openai_api_key)
+        
+        # Check available models and verify GPT-5 availability
+        self.available_models = self.check_available_models()
+        self.model = self.select_best_model()
+    
+    def check_available_models(self) -> List[str]:
+        """Check available OpenAI models via API"""
+        try:
+            models = self.openai_client.models.list()
+            available_models = [model.id for model in models.data]
+            logger.info(f"Available OpenAI models: {available_models}")
+            return available_models
+        except Exception as e:
+            logger.warning(f"Could not fetch available models: {e}")
+            return []
+    
+    def select_best_model(self) -> str:
+        """Select the best available model, preferring GPT-5"""
+        preferred_models = ["gpt-5", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"]
+        
+        for model in preferred_models:
+            if model in self.available_models:
+                logger.info(f"Selected model: {model}")
+                return model
+        
+        # Fallback to first available model
+        if self.available_models:
+            fallback_model = self.available_models[0]
+            logger.warning(f"Using fallback model: {fallback_model}")
+            return fallback_model
+        
+        # Ultimate fallback
+        logger.error("No OpenAI models available, using gpt-4 as fallback")
+        return "gpt-4"
     
     def get_vm_status(self, resource_group: str, vm_name: str) -> Dict[str, Any]:
         """Get VM status and basic information"""
@@ -153,7 +187,7 @@ class AzureRDPTroubleshooter:
             """
             
             response = self.openai_client.chat.completions.create(
-                model="gpt-4",
+                model=self.model,
                 messages=[
                     {"role": "system", "content": "You are an expert Azure RDP troubleshooting specialist. Provide clear, actionable recommendations in JSON format."},
                     {"role": "user", "content": prompt}
@@ -242,8 +276,59 @@ Examples:
     parser.add_argument('--auto-fix', '-a', action='store_true', help='Automatically apply fixes (use with caution)')
     parser.add_argument('--verbose', '-V', action='store_true', help='Enable verbose logging')
     parser.add_argument('--output', '-o', help='Output file for results (JSON format)')
+    parser.add_argument('--list-models', action='store_true', help='List available OpenAI models and exit')
     
     args = parser.parse_args()
+    
+    # Handle --list-models option
+    if args.list_models:
+        try:
+            openai_api_key = os.getenv('OPENAI_API_KEY')
+            if not openai_api_key:
+                print("❌ OPENAI_API_KEY environment variable is required")
+                sys.exit(1)
+            
+            client = openai.OpenAI(api_key=openai_api_key)
+            models = client.models.list()
+            
+            print("🤖 Available OpenAI Models:")
+            print("=" * 50)
+            
+            gpt_models = []
+            other_models = []
+            
+            for model in models.data:
+                if 'gpt' in model.id.lower():
+                    gpt_models.append(model.id)
+                else:
+                    other_models.append(model.id)
+            
+            # Sort GPT models by preference
+            gpt_models.sort(key=lambda x: (
+                0 if x == 'gpt-5' else
+                1 if x == 'gpt-4-turbo' else
+                2 if x == 'gpt-4' else
+                3 if x == 'gpt-3.5-turbo' else 4
+            ))
+            
+            print("🎯 GPT Models (Recommended):")
+            for model in gpt_models:
+                status = "✅ SELECTED" if model == 'gpt-5' else "  "
+                print(f"  {status} {model}")
+            
+            if other_models:
+                print("\n📋 Other Models:")
+                for model in sorted(other_models):
+                    print(f"    {model}")
+            
+            print(f"\n📊 Total Models Available: {len(models.data)}")
+            print(f"🎯 Selected Model: gpt-5" if 'gpt-5' in gpt_models else f"🎯 Selected Model: {gpt_models[0] if gpt_models else 'None'}")
+            
+        except Exception as e:
+            print(f"❌ Error fetching models: {e}")
+            sys.exit(1)
+        
+        sys.exit(0)
     
     # Get subscription ID
     subscription_id = args.subscription_id
