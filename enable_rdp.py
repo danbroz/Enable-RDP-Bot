@@ -130,17 +130,28 @@ class AzureRDPTroubleshooter:
                     nsg = self.network_client.network_security_groups.get(resource_group, nsg_name)
                     
                     for rule in nsg.security_rules:
-                        if rule.destination_port_range == '3389' or '3389' in (rule.destination_port_ranges or []):
+                        destination_port_range = getattr(rule, 'destination_port_range', None)
+                        destination_port_ranges = getattr(rule, 'destination_port_ranges', None) or []
+                        has_rdp = (
+                            destination_port_range == '3389' or
+                            ('3389' in destination_port_ranges)
+                        )
+                        if has_rdp:
+                            # Normalize enum-like fields which may be strings in some SDK versions
+                            access = getattr(rule.access, 'value', rule.access)
+                            direction = getattr(rule.direction, 'value', rule.direction)
+                            protocol = getattr(rule.protocol, 'value', rule.protocol)
+
                             nsg_info['rules'].append({
                                 'name': rule.name,
-                                'access': rule.access.value,
-                                'direction': rule.direction.value,
-                                'source': rule.source_address_prefix,
-                                'destination': rule.destination_address_prefix,
-                                'protocol': rule.protocol.value
+                                'access': access,
+                                'direction': direction,
+                                'source': getattr(rule, 'source_address_prefix', None),
+                                'destination': getattr(rule, 'destination_address_prefix', None),
+                                'protocol': protocol
                             })
                             
-                            if rule.access.value == 'Allow' and rule.direction.value == 'Inbound':
+                            if access == 'Allow' and direction == 'Inbound':
                                 nsg_info['rdp_allowed'] = True
             
             return nsg_info
@@ -189,7 +200,7 @@ class AzureRDPTroubleshooter:
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.3,
-                max_tokens=1000
+                max_completion_tokens=1000
             )
             
             # Parse AI response
