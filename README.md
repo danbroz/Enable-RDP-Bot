@@ -178,7 +178,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Setup**: See [Quick Start](#-quick-start) section above
 - **Usage**: See [Usage](#usage) section above
 - **Troubleshooting**: See [Troubleshooting](#-troubleshooting) section above
-
-## 📞 Support
-
-For technical support or questions about this assessment solution, please refer to the documentation or contact the development team.
