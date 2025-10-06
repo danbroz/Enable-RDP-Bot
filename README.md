@@ -12,7 +12,7 @@ A simple command-line tool for diagnosing and fixing RDP connectivity issues on 
 - **☁️ Azure Native**: Built with Azure SDK and Azure CLI authentication
 - **⚡ Simple & Fast**: Command-line tool with minimal setup
 
-## 🎯 Assessment Deliverables
+## 🎯 Documentation
 
 This solution was created for a Microsoft Azure Supportability Test and includes:
 

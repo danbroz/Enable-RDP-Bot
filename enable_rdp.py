@@ -219,7 +219,17 @@ class AzureRDPTroubleshooter:
                 }
             
             try:
-                parsed_response = json.loads(ai_response)
+                # Clean the response - remove markdown code blocks if present
+                cleaned_response = ai_response.strip()
+                if cleaned_response.startswith('```json'):
+                    cleaned_response = cleaned_response[7:]  # Remove ```json
+                if cleaned_response.startswith('```'):
+                    cleaned_response = cleaned_response[3:]   # Remove ```
+                if cleaned_response.endswith('```'):
+                    cleaned_response = cleaned_response[:-3]  # Remove trailing ```
+                cleaned_response = cleaned_response.strip()
+                
+                parsed_response = json.loads(cleaned_response)
                 # Validate that the response has the expected structure
                 required_fields = ["root_cause", "fix_steps", "prevention", "priority", "confidence"]
                 if all(field in parsed_response for field in required_fields):
