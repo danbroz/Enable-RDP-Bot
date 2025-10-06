@@ -73,47 +73,21 @@ This solution was created for a Microsoft Azure Supportability Test and includes
    az account set --subscription "your-subscription-id"
    ```
 
-5. **Test OpenAI API and model availability:**
+5. **Test the tool:**
    ```bash
-   python test_models.py
+   python enable_rdp.py --rg my-resource-group --vm my-vm-name
    ```
 
 ### Usage
 
-#### Basic Usage
-
 ```bash
-python enable_rdp.py --resource-group my-resource-group --vm my-vm-name
-```
-
-#### Advanced Usage
-
-```bash
-# With auto-fix enabled
-python enable_rdp.py --resource-group prod-rg --vm web-server-01 --auto-fix
-
-# With verbose logging
-python enable_rdp.py --resource-group test-rg --vm test-vm --verbose
-
-# Save results to file
-python enable_rdp.py --resource-group prod-rg --vm app-server --output report.json
-
-# Specify subscription ID
-python enable_rdp.py --resource-group my-rg --vm my-vm --subscription-id "your-subscription-id"
-
-# List available OpenAI models
-python enable_rdp.py --list-models
+python enable_rdp.py --rg my-resource-group --vm my-vm-name
 ```
 
 #### Command Line Options
 
-- `--resource-group, -g`: Azure resource group name (required)
+- `--rg`: Azure resource group name (required)
 - `--vm, -v`: Virtual machine name (required)
-- `--subscription-id, -s`: Azure subscription ID (optional, defaults to Azure CLI default)
-- `--auto-fix, -a`: Automatically apply fixes (use with caution)
-- `--verbose, -V`: Enable verbose logging
-- `--output, -o`: Output file for results (JSON format)
-- `--list-models`: List available OpenAI models and exit
 
 ## 🧪 Testing
 
@@ -124,7 +98,7 @@ python enable_rdp.py --list-models
 ./create_example_vm.sh
 
 # Test the tool
-python enable_rdp.py --resource-group example-resource-group --vm example-vm
+python enable_rdp.py --rg example-resource-group --vm example-vm
 
 # Clean up
 ./cleanup_example_vm.sh
@@ -141,12 +115,7 @@ The tool automatically selects the best available model in this order:
 3. **GPT-4** - Standard high-quality model
 4. **GPT-3.5 Turbo** - Fast and efficient model
 
-### Check Available Models
-```bash
-python enable_rdp.py --list-models
-```
-
-This will show all available OpenAI models and indicate which one is selected.
+The tool automatically selects the best available model and provides detailed logging output.
 
 ## 📊 Output Format
 
@@ -189,7 +158,7 @@ The tool outputs JSON with the following structure:
 
 ### Logs
 
-The tool creates detailed logs in `rdp_troubleshooting.log` when using verbose mode.
+The tool provides detailed logging output by default, showing all diagnostic steps and AI analysis.
 
 ## 🛡️ Security
 

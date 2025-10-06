@@ -4,10 +4,10 @@ Enable RDP Bot
 A command-line tool for diagnosing and fixing RDP connectivity issues on Azure VMs.
 
 Usage:
-    python enable_rdp.py --resource-group <rg-name> --vm <vm-name> [options]
+    python enable_rdp.py --rg <rg-name> --vm <vm-name>
 
 Example:
-    python enable_rdp.py --resource-group production-rg --vm web-server-01
+    python enable_rdp.py --rg production-rg --vm web-server-01
 """
 
 import argparse
@@ -28,9 +28,9 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Configure logging
+# Configure logging (always verbose)
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
@@ -38,12 +38,8 @@ logger = logging.getLogger(__name__)
 class AzureRDPTroubleshooter:
     """Azure RDP Troubleshooting Agent"""
     
-    def __init__(self, subscription_id: str, verbose: bool = False):
+    def __init__(self, subscription_id: str):
         self.subscription_id = subscription_id
-        self.verbose = verbose
-        
-        if verbose:
-            logging.getLogger().setLevel(logging.DEBUG)
         
         # Initialize Azure clients
         self.credential = DefaultAzureCredential()
@@ -220,7 +216,7 @@ class AzureRDPTroubleshooter:
                 "confidence": 0.0
             }
     
-    def troubleshoot_rdp(self, resource_group: str, vm_name: str, auto_fix: bool = False) -> Dict[str, Any]:
+    def troubleshoot_rdp(self, resource_group: str, vm_name: str) -> Dict[str, Any]:
         """Main troubleshooting workflow"""
         logger.info(f"Starting RDP troubleshooting for VM: {vm_name} in resource group: {resource_group}")
         
@@ -251,7 +247,6 @@ class AzureRDPTroubleshooter:
             'vm_status': vm_status,
             'nsg_info': nsg_info,
             'ai_analysis': ai_analysis,
-            'auto_fix_enabled': auto_fix,
             'status': 'completed'
         }
         
@@ -263,100 +258,35 @@ def main():
         description='Enable RDP Bot - Diagnose and fix RDP connectivity issues on Azure VMs',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Examples:
-  python enable_rdp.py --resource-group production-rg --vm web-server-01
-  python enable_rdp.py --resource-group test-rg --vm test-vm --auto-fix --verbose
-  python enable_rdp.py --resource-group prod-rg --vm app-server --output report.json
+Example:
+  python enable_rdp.py --rg production-rg --vm web-server-01
         """
     )
     
-    parser.add_argument('--resource-group', '-g', required=True, help='Azure resource group name')
+    parser.add_argument('--rg', required=True, help='Azure resource group name')
     parser.add_argument('--vm', '-v', required=True, help='Virtual machine name')
-    parser.add_argument('--subscription-id', '-s', help='Azure subscription ID (default: from Azure CLI)')
-    parser.add_argument('--auto-fix', '-a', action='store_true', help='Automatically apply fixes (use with caution)')
-    parser.add_argument('--verbose', '-V', action='store_true', help='Enable verbose logging')
-    parser.add_argument('--output', '-o', help='Output file for results (JSON format)')
-    parser.add_argument('--list-models', action='store_true', help='List available OpenAI models and exit')
     
     args = parser.parse_args()
     
-    # Handle --list-models option
-    if args.list_models:
-        try:
-            openai_api_key = os.getenv('OPENAI_API_KEY')
-            if not openai_api_key:
-                print("❌ OPENAI_API_KEY environment variable is required")
-                sys.exit(1)
-            
-            client = openai.OpenAI(api_key=openai_api_key)
-            models = client.models.list()
-            
-            print("🤖 Available OpenAI Models:")
-            print("=" * 50)
-            
-            gpt_models = []
-            other_models = []
-            
-            for model in models.data:
-                if 'gpt' in model.id.lower():
-                    gpt_models.append(model.id)
-                else:
-                    other_models.append(model.id)
-            
-            # Sort GPT models by preference
-            gpt_models.sort(key=lambda x: (
-                0 if x == 'gpt-5' else
-                1 if x == 'gpt-4-turbo' else
-                2 if x == 'gpt-4' else
-                3 if x == 'gpt-3.5-turbo' else 4
-            ))
-            
-            print("🎯 GPT Models (Recommended):")
-            for model in gpt_models:
-                status = "✅ SELECTED" if model == 'gpt-5' else "  "
-                print(f"  {status} {model}")
-            
-            if other_models:
-                print("\n📋 Other Models:")
-                for model in sorted(other_models):
-                    print(f"    {model}")
-            
-            print(f"\n📊 Total Models Available: {len(models.data)}")
-            print(f"🎯 Selected Model: gpt-5" if 'gpt-5' in gpt_models else f"🎯 Selected Model: {gpt_models[0] if gpt_models else 'None'}")
-            
-        except Exception as e:
-            print(f"❌ Error fetching models: {e}")
-            sys.exit(1)
-        
-        sys.exit(0)
-    
-    # Get subscription ID
-    subscription_id = args.subscription_id
-    if not subscription_id:
-        try:
-            # Try to get from Azure CLI
-            import subprocess
-            result = subprocess.run(['az', 'account', 'show', '--query', 'id', '-o', 'tsv'], 
-                                  capture_output=True, text=True, check=True)
-            subscription_id = result.stdout.strip()
-        except:
-            logger.error("Could not determine Azure subscription ID. Please provide --subscription-id")
-            sys.exit(1)
+    # Get subscription ID from Azure CLI
+    try:
+        import subprocess
+        result = subprocess.run(['az', 'account', 'show', '--query', 'id', '-o', 'tsv'], 
+                              capture_output=True, text=True, check=True)
+        subscription_id = result.stdout.strip()
+    except:
+        logger.error("Could not determine Azure subscription ID. Please ensure you are logged in with 'az login'")
+        sys.exit(1)
     
     try:
         # Initialize troubleshooter
-        troubleshooter = AzureRDPTroubleshooter(subscription_id, args.verbose)
+        troubleshooter = AzureRDPTroubleshooter(subscription_id)
         
         # Run troubleshooting
-        result = troubleshooter.troubleshoot_rdp(args.resource_group, args.vm, args.auto_fix)
+        result = troubleshooter.troubleshoot_rdp(args.rg, args.vm)
         
         # Output results
-        if args.output:
-            with open(args.output, 'w') as f:
-                json.dump(result, f, indent=2)
-            logger.info(f"Results saved to {args.output}")
-        else:
-            print(json.dumps(result, indent=2))
+        print(json.dumps(result, indent=2))
             
     except Exception as e:
         logger.error(f"Error: {e}")
