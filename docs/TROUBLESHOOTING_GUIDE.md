@@ -57,7 +57,7 @@ python enable_rdp_bot.py --rg my-rg --vm my-vm
 ### Step 2: Network Security Group Analysis
 
 ```bash
-# Detailed NSG analysis
+# Detailed NSG analysis + auto-fix
 python enable_rdp_bot.py --rg my-rg --vm my-vm
 ```
 
@@ -74,7 +74,7 @@ python enable_rdp_bot.py --rg my-rg --vm my-vm
 
 ### Step 3: AI-Powered Analysis
 
-The tool automatically runs AI analysis using GPT-5 (with fallback to GPT-4) to identify root causes and provide recommendations.
+The tool automatically runs AI analysis using reliable GPT-4 family models to identify root causes and provide recommendations.
 
 **AI Analysis Output:**
 ```json
@@ -129,7 +129,7 @@ az network nsg rule create \
   --resource-group my-rg \
   --nsg-name my-nsg \
   --name AllowRDP \
-  --priority 1000 \
+  --priority 999 \
   --source-address-prefixes '*' \
   --destination-port-ranges 3389 \
   --access Allow \
@@ -139,7 +139,7 @@ az network nsg rule create \
 
 **Check Rule Priority:**
 - Lower numbers = higher priority
-- Ensure RDP rule has higher priority than deny rules
+- Ensure `AllowRDP` has a lower number (higher priority) than any `DenyRDP` on port 3389
 
 ### 3. Network Interface Issues
 
